@@ -1,0 +1,12 @@
+//
+// File created by:  xrun
+// Do not modify this file
+
+s1::(19Feb2024:09:23:50):( xrun +sv -64bit -f files_verilog.f -top cpu_tb -timescale 1ns/10ps -access +rwc -allowredefinition )
+s2::(19Feb2024:09:26:11):( xrun +sv -64bit -f files_verilog.f -top cpu_tb -timescale 1ns/10ps -access +rwc -allowredefinition )
+s3::(19Feb2024:09:27:24):( xrun +sv -64bit -f files_verilog.f -top cpu_tb -timescale 1ns/10ps -access +rwc -allowredefinition )
+s4::(19Feb2024:09:58:53):( xrun +sv -64bit -f files_verilog.f -top cpu_tb -timescale 1ns/10ps -access +rwc -allowredefinition )
+s5::(19Feb2024:10:00:36):( xrun +sv -64bit -f files_verilog.f -top cpu_tb -timescale 1ns/10ps -access +rwc -allowredefinition )
+s6::(19Feb2024:10:01:20):( xrun +sv -64bit -f files_verilog.f -top cpu_tb -timescale 1ns/10ps -access +rwc -allowredefinition )
+s7::(19Feb2024:10:02:05):( xrun +sv -64bit -f files_verilog.f -top cpu_tb -timescale 1ns/10ps -access +rwc -allowredefinition )
+s8::(19Feb2024:10:08:37):( xrun +sv -64bit -f files_verilog.f -top cpu_tb -timescale 1ns/10ps -access +rwc -allowredefinition )

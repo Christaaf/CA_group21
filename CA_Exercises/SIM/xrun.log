@@ -1,0 +1,69 @@
+xrun(64): 23.03-s002: (c) Copyright 1995-2023 Cadence Design Systems, Inc.
+TOOL:	xrun(64)	23.03-s002: Started on Feb 19, 2024 at 10:08:37 CET
+xrun
+	+sv
+	-64bit
+	-f files_verilog.f
+		../Verilog/RTL/alu.v
+		../Verilog/RTL/alu_control.v
+		../Verilog/RTL/branch_unit.v
+		../Verilog/RTL/control_unit.v
+		../Verilog/RTL/cpu.v
+		../Verilog/RTL/immediate_extend_unit.v
+		../Verilog/RTL/mux_2.v
+		../Verilog/RTL/pc.v
+		../Verilog/RTL/register_file.v
+		../Verilog/RTL/reg_arstn.v
+		../Verilog/RTL/reg_arstn_en.v
+		../Verilog/RTL/sram.v
+		../Verilog/cpu_tb.v
+		../Verilog/sky130_sram_2rw.v
+	-top cpu_tb
+	-timescale 1ns/10ps
+	-access +rwc
+	-allowredefinition
+Recompiling... reason: file '../Verilog/RTL/cpu.v' is newer than expected.
+	expected: Mon Feb 19 08:57:23 2024
+	actual:   Mon Feb 19 10:08:31 2024
+file: ../Verilog/RTL/cpu.v
+	module worklib.cpu:v
+		errors: 0, warnings: 0
+	Elaborating the design hierarchy:
+		Caching library 'worklib' ....... Done
+	Top level design units:
+		cpu_tb
+	Building instance overlay tables: .................... Done
+	Generating native compiled code:
+		worklib.cpu_tb:v <0x3a283d44>
+			streams:  27, words: 55085
+		worklib.cpu:v <0x613d946d>
+			streams:   1, words:   305
+	Building instance specific data structures.
+	Loading native compiled code:     .................... Done
+	Design hierarchy summary:
+		                  Instances  Unique
+		Modules:                 18      15
+		Registers:              104     101
+		Scalar wires:            31       -
+		Expanded wires:          32       1
+		Vectored wires:          38       -
+		Always blocks:           40      37
+		Initial blocks:           3       3
+		Cont. assignments:        3       4
+		Pseudo assignments:      29       -
+		Simulation timescale:  10ps
+	Writing initial simulation snapshot: worklib.cpu_tb:v
+Loading snapshot worklib.cpu_tb:v .................... Done
+xcelium> source /esat/micas-data/software/Cadence/xcelium_23.03/tools/xcelium/files/xmsimrc
+xcelium> run
+
+Start Execution
+
+[1;34m
+Mult2 Working Correctly
+[0m
+         40 cycles
+Simulation complete via $finish(1) at time 32450 NS + 8
+../Verilog/cpu_tb.v:327    $finish;
+xcelium> exit
+TOOL:	xrun(64)	23.03-s002: Exiting on Feb 19, 2024 at 10:08:38 CET  (total: 00:00:01)
