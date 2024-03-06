@@ -2,23 +2,23 @@
 set ::env(STD_CELL_LIBRARY) "sky130_fd_sc_hd"
 
 set ::env(DESIGN_NAME) cpu
-set ::env(VERILOG_FILES) ../Verilog/RTL_SOLUTION3_pipeline_basic_MULT2/*.v
+set ::env(VERILOG_FILES) ../Verilog/RTL_SOLUTION2_multiplication_support_MULT2/*.v
 
 set ::env(CLOCK_PORT) "clk"
 set ::env(CLOCK_NET) "clk"
-set ::env(CLOCK_PERIOD) 20
+set ::env(CLOCK_PERIOD) 100
 set ::env(CLOCK_TREE_SYNTH) 1
 
 set ::env(DESIGN_IS_CORE) 1      
 set ::env(SYNTH_MAX_FANOUT) 30
 set ::env(SYNTH_NO_FLAT) 1
 
-set ::env(SYNTH_STRATEGY) "AREA 3"
+set ::env(SYNTH_STRATEGY) "AREA 0"
 set ::env(SYNTH_NO_FLAT) 1
 
 # Connect the layout files and abstracts
 # Connect the blackbox information and timing data
-set ::env(EXTRA_LEFS)      [list OpenRAM_output/sky130_sram_2rw_64x128_64.lef OpenRAM_output/sky130_sram_2rw_32x128_32.lef]
+set ::env(EXTRA_LEFS)      [list OpenRAM_output/sky130_sram_2rw_32x128_32.lef OpenRAM_output/sky130_sram_2rw_64x128_64.lef]
 set ::env(EXTRA_GDS_FILES) [list OpenRAM_output/sky130_sram_2rw_64x128_64.gds OpenRAM_output/sky130_sram_2rw_32x128_32.gds]
 set ::env(EXTRA_LIBS)      [list OpenRAM_output/sky130_sram_2rw_64x128_64_TT_1p8V_25C.lib OpenRAM_output/sky130_sram_2rw_32x128_32_TT_1p8V_25C.lib]
 
@@ -52,7 +52,7 @@ set ::env(PL_MACRO_CHANNEL) [list 80 80]
 # set ::env(MACRO_PLACEMENT_CFG) macro_placement.cfg
 
 # other config
-set ::env(ROUTING_CORES) 16
+set ::env(ROUTING_CORES) 12
 set ::env(RUN_KLAYOUT_XOR) 0
 set ::env(MAGIC_DRC_USE_GDS) 0
 set ::env(QUIT_ON_MAGIC_DRC) 0    
