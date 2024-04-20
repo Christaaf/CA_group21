@@ -47,7 +47,7 @@ wire [      63:0] updated_pc,current_pc;
 
 // IF_ID REG WIRES
 wire  [63:0]   pc_IF_ID;
-wire [31:0]    instruction_ID;
+wire [31:0]    instruction_IF_ID;
 
 // ID STAGE WIRES
 wire              reg_dst,branch,mem_read,mem_2_reg,
@@ -57,7 +57,7 @@ wire [      63:0] regfile_rdata_1,regfile_rdata_2;
 wire signed [63:0] immediate_extended;
 
 //ID_EX WIRES
-wire [       1:0] EX_alu_op;
+wire [       1:0] alu_op_ID_EX;
 wire           reg_dst_ID_EX;
 wire           branch_ID_EX;
 wire           mem_read_ID_EX;
@@ -130,9 +130,9 @@ pc #(
    .arst_n    (arst_n    ),
    .branch_pc (branch_pc ),
    .jump_pc   (jump_pc   ),
-   .zero_flag (zero_flag ),
-   .branch    (branch    ),
-   .jump      (jump      ),
+   .zero_flag (zero_flag_EX_MEM ),
+   .branch    (branch_EX_MEM     ),
+   .jump      (jump_EX_MEM       ),
    .current_pc(current_pc),
    .enable    (enable    ),
    .updated_pc(updated_pc)
@@ -228,18 +228,18 @@ immediate_extend_unit immediate_extend_u(
 // REG aluop_ID_EX
 reg_arstn_en#(
    .DATA_W(2) // width of the forwarded signal
-)aluop_ID_EX(
+)aluop_IDEX(
    .clk (clk),
    .arst_n (arst_n),
    .din (alu_op),
    .en(enable),
-   .dout(EX_alu_op)
+   .dout(alu_op_ID_EX)
 );
 
 // REG alusrc_ID_EX
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)alusrc_ID_EX(
+)alusrc_IDEX(
    .clk (clk),
    .arst_n (arst_n),
    .din (alu_src),
@@ -250,7 +250,7 @@ reg_arstn_en#(
 // REG regdst_ID_EX
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)regdst_ID_EX(
+)regdst_IDEX(
    .clk (clk),
    .arst_n (arst_n),
    .din (reg_dst),
@@ -261,7 +261,7 @@ reg_arstn_en#(
 // REG regwrite_ID_EX
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)regwrite_ID_EX(
+)regwrite_IDEX(
    .clk (clk),
    .arst_n (arst_n),
    .din (reg_write),
@@ -272,7 +272,7 @@ reg_arstn_en#(
 // REG memwrite_ID_EX
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)memwrite_ID_EX(
+)memwrite_IDEX(
    .clk (clk),
    .arst_n (arst_n),
    .din (mem_write),
@@ -283,7 +283,7 @@ reg_arstn_en#(
 // REG branch_ID_EX
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)branch_ID_EX(
+)branch_IDEX(
    .clk (clk),
    .arst_n (arst_n),
    .din (branch),
@@ -294,7 +294,7 @@ reg_arstn_en#(
 // REG memread_ID_EX
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)memread_ID_EX(
+)memread_IDEX(
    .clk (clk),
    .arst_n (arst_n),
    .din (mem_read),
@@ -305,7 +305,7 @@ reg_arstn_en#(
 // REG mem2reg_ID_EX
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)mem2reg_ID_EX(
+)mem2reg_IDEX(
    .clk (clk),
    .arst_n (arst_n),
    .din (mem_2_reg),
@@ -316,7 +316,7 @@ reg_arstn_en#(
 // REG jump_ID_EX
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)jump_ID_EX(
+)jump_IDEX(
    .clk (clk),
    .arst_n (arst_n),
    .din (jump),
@@ -327,7 +327,7 @@ reg_arstn_en#(
 // REG PC_ID_EX
 reg_arstn_en#(
    .DATA_W(64) // width of the forwarded signal
-)PC_ID_EX(
+)PC_IDEX(
    .clk (clk),
    .arst_n (arst_n),
    .din (pc_IF_ID),
@@ -338,7 +338,7 @@ reg_arstn_en#(
 // REG readdata1_ID_EX
 reg_arstn_en#(
    .DATA_W(64) // width of the forwarded signal
-)readdata1_ID_EX(
+)readdata1_IDEX(
    .clk (clk),
    .arst_n (arst_n),
    .din (regfile_rdata_1),
@@ -349,7 +349,7 @@ reg_arstn_en#(
 // REG readdata2_ID_EX
 reg_arstn_en#(
    .DATA_W(64) // width of the forwarded signal
-)readdata2_ID_EX(
+)readdata2_IDEX(
    .clk (clk),
    .arst_n (arst_n),
    .din (regfile_rdata_2),
@@ -360,7 +360,7 @@ reg_arstn_en#(
 // REG immediate_ID_EX
 reg_arstn_en#(
    .DATA_W(64) // width of the forwarded signal
-)immediate_ID_EX(
+)immediate_IDEX(
    .clk (clk),
    .arst_n (arst_n),
    .din (immediate_extended),
@@ -371,7 +371,7 @@ reg_arstn_en#(
 // REG waddr_ID_EX
 reg_arstn_en#(
    .DATA_W(5) // width of the forwarded signal
-)waddr_ID_EX(
+)waddr_IDEX(
    .clk (clk),
    .arst_n (arst_n),
    .din (instruction_IF_ID[11:7]),
@@ -382,7 +382,7 @@ reg_arstn_en#(
 // REG func75_ID_EX
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)func75_ID_EX(
+)func75_IDEX(
    .clk (clk),
    .arst_n (arst_n),
    .din (instruction_IF_ID[30]),
@@ -393,7 +393,7 @@ reg_arstn_en#(
 // REG func70_ID_EX
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)func70_ID_EX(
+)func70_IDEX(
    .clk (clk),
    .arst_n (arst_n),
    .din (instruction_IF_ID[25]),
@@ -404,7 +404,7 @@ reg_arstn_en#(
 // REG func3_ID_EX
 reg_arstn_en#(
    .DATA_W(3) // width of the forwarded signal
-)func3_ID_EX(
+)func3_IDEX(
    .clk (clk),
    .arst_n (arst_n),
    .din (instruction_IF_ID[14:12]),
@@ -420,26 +420,26 @@ reg_arstn_en#(
 
 // EX STAGE BEGIN
 alu_control alu_ctrl(
-   .func7_5       (instruction[30]   ),
-   .func7_0       (instruction[25]   ),
-   .func3          (instruction[14:12]),
-   .alu_op         (alu_op            ),
+   .func7_5       (func75_ID_EX ),
+   .func7_0       (func70_ID_EX   ),
+   .func3          (func3_ID_EX),
+   .alu_op         (alu_op_ID_EX            ),
    .alu_control    (alu_control       )
 );
 
 mux_2 #(
    .DATA_W(64)
 ) alu_operand_mux (
-   .input_a (immediate_extended),
-   .input_b (regfile_rdata_2    ),
-   .select_a(alu_src           ),
+   .input_a (immediate_extended_ID_EX),
+   .input_b (regfile_rdata_2_ID_EX    ),
+   .select_a(alu_src_ID_EX           ),
    .mux_out (alu_operand_2     )
 );
 
 alu#(
    .DATA_W(64)
 ) alu(
-   .alu_in_0 (regfile_rdata_1 ),
+   .alu_in_0 (regfile_rdata_1_ID_EX ),
    .alu_in_1 (alu_operand_2   ),
    .alu_ctrl (alu_control     ),
    .alu_out  (alu_out         ),
@@ -450,8 +450,8 @@ alu#(
 branch_unit#(
    .DATA_W(64)
 )branch_unit(
-   .updated_pc         (updated_pc        ),
-   .immediate_extended (immediate_extended),
+   .updated_pc         (pc_ID_EX     ),
+   .immediate_extended (immediate_extended_ID_EX),
    .branch_pc          (branch_pc         ),
    .jump_pc            (jump_pc           )
 );
@@ -466,7 +466,7 @@ branch_unit#(
 // REG regdst_EX_MEM
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)regdst_EX_MEM(
+)regdst_EXMEM(
    .clk (clk),
    .arst_n (arst_n),
    .din (reg_dst_ID_EX), 
@@ -477,7 +477,7 @@ reg_arstn_en#(
 // REG branch_EX_MEM
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)branch_EX_MEM(
+)branch_EXMEM(
    .clk (clk),
    .arst_n (arst_n),
    .din (branch_ID_EX), 
@@ -488,7 +488,7 @@ reg_arstn_en#(
 // REG memread_EX_MEM
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)memread_EX_MEM(
+)memread_EXMEM(
    .clk (clk),
    .arst_n (arst_n),
    .din (mem_read_ID_EX), 
@@ -499,7 +499,7 @@ reg_arstn_en#(
 // REG mem2reg_EX_MEM
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)mem2reg_EX_MEM(
+)mem2reg_EXMEM(
    .clk (clk),
    .arst_n (arst_n),
    .din (mem_2_reg_ID_EX), 
@@ -510,7 +510,7 @@ reg_arstn_en#(
 // REG memwrite_EX_MEM
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)memwrite_EX_MEM(
+)memwrite_EXMEM(
    .clk (clk),
    .arst_n (arst_n),
    .din (mem_write_ID_EX), 
@@ -521,7 +521,7 @@ reg_arstn_en#(
 // REG regwrite_EX_MEM
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)regwrite_EX_MEM(
+)regwrite_EXMEM(
    .clk (clk),
    .arst_n (arst_n),
    .din (reg_write_ID_EX), 
@@ -532,7 +532,7 @@ reg_arstn_en#(
 // REG jump_EX_MEM
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)jump_EX_MEM(
+)jump_EXMEM(
    .clk (clk),
    .arst_n (arst_n),
    .din (jump_ID_EX), 
@@ -543,7 +543,7 @@ reg_arstn_en#(
 // REG PC_EX_MEM
 reg_arstn_en#(
    .DATA_W(64) // width of the forwarded signal
-)PC_EX_MEM(
+)PC_EXMEM(
    .clk (clk),
    .arst_n (arst_n),
    .din (pc_ID_EX), 
@@ -554,7 +554,7 @@ reg_arstn_en#(
 // REG zero_EX_MEM
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)zero_EX_MEM(
+)zero_EXMEM(
    .clk (clk),
    .arst_n (arst_n),
    .din (zero_flag), 
@@ -565,7 +565,7 @@ reg_arstn_en#(
 // REG aluout_EX_MEM
 reg_arstn_en#(
    .DATA_W(64) // width of the forwarded signal
-)aluout_EX_MEM(
+)aluout_EXMEM(
    .clk (clk),
    .arst_n (arst_n),
    .din (alu_out), 
@@ -576,7 +576,7 @@ reg_arstn_en#(
 // REG readdata2_EX_MEM
 reg_arstn_en#(
    .DATA_W(64) // width of the forwarded signal
-)readdata2_EX_MEM(
+)readdata2_EXMEM(
    .clk (clk),
    .arst_n (arst_n),
    .din (regfile_rdata_2_ID_EX), 
@@ -587,7 +587,7 @@ reg_arstn_en#(
 // REG waddr_EX_MEM
 reg_arstn_en#(
    .DATA_W(5) // width of the forwarded signal
-)waddr_EX_MEM(
+)waddr_EXMEM(
    .clk (clk),
    .arst_n (arst_n),
    .din (waddr_ID_EX), 
@@ -607,11 +607,11 @@ sram_BW64 #(
    .ADDR_W(10)
 ) data_memory(
    .clk      (clk            ),
-   .addr     (alu_out        ),
-   .wen      (mem_write      ),
-   .ren      (mem_read       ),
-   .wdata    (regfile_rdata_2),
-   .rdata    (mem_data       ),   
+   .addr     (alu_out_EX_MEM        ),
+   .wen      (mem_write_EX_MEM      ),
+   .ren      (mem_read_EX_MEM       ),
+   .wdata    (regfile_rdata_2_EX_MEM),
+   .rdata    (mem_data_MEM       ),   
    .addr_ext (addr_ext_2     ),
    .wen_ext  (wen_ext_2      ),
    .ren_ext  (ren_ext_2      ),
@@ -630,10 +630,10 @@ sram_BW64 #(
 // REG regdst_MEM_WB
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)regdst_MEM_WB(
+)regdst_MEMWB(
    .clk (clk),
    .arst_n (arst_n),
-   .din (MEM_reg_dst),
+   .din (reg_dst_EX_MEM),
    .en(enable),
    .dout(reg_dst_MEM_WB)
 );
@@ -641,7 +641,7 @@ reg_arstn_en#(
 // REG mem2reg_MEM_WB
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)mem2reg_MEM_WB(
+)mem2reg_MEMWB(
    .clk (clk),
    .arst_n (arst_n),
    .din (mem_2_reg_EX_MEM),
@@ -652,7 +652,7 @@ reg_arstn_en#(
 // REG regwrite_MEM_WB
 reg_arstn_en#(
    .DATA_W(1) // width of the forwarded signal
-)regwrite_MEM_WB(
+)regwrite_MEMWB(
    .clk (clk),
    .arst_n (arst_n),
    .din (reg_write_EX_MEM),
@@ -663,7 +663,7 @@ reg_arstn_en#(
 // REG mem_data_MEM_WB
 reg_arstn_en#(
    .DATA_W(64) // width of the forwarded signal
-)mem_data_MEM_WB(
+)mem_data_MEMWB(
    .clk (clk),
    .arst_n (arst_n),
    .din (mem_data_MEM),
@@ -674,7 +674,7 @@ reg_arstn_en#(
 // REG aluout_MEM_WB
 reg_arstn_en#(
    .DATA_W(64) // width of the forwarded signal
-)aluout_MEM_WB(
+)aluout_MEMWB(
    .clk (clk),
    .arst_n (arst_n),
    .din (alu_out_EX_MEM),
@@ -685,7 +685,7 @@ reg_arstn_en#(
 // REG waddr_MEM_WB
 reg_arstn_en#(
    .DATA_W(5) // width of the forwarded signal
-)waddr_MEM_WB(
+)waddr_MEMWB(
    .clk (clk),
    .arst_n (arst_n),
    .din (waddr_EX_MEM),
@@ -704,10 +704,10 @@ reg_arstn_en#(
 mux_2 #(
    .DATA_W(64)
 ) regfile_data_mux (
-   .input_a  (mem_data     ),
-   .input_b  (alu_out      ),
-   .select_a (mem_2_reg    ),
-   .mux_out  (regfile_wdata)
+   .input_a  (mem_data_MEM_WB     ),
+   .input_b  (alu_out_MEM_WB      ),
+   .select_a (mem_2_reg_MEM_WB    ),
+   .mux_out  (regfile_wdata_WB)
 );
 
 // WB STAGE END 
