@@ -1,5 +1,9 @@
 xrun(64): 23.03-s002: (c) Copyright 1995-2023 Cadence Design Systems, Inc.
+<<<<<<< HEAD
 TOOL:	xrun(64)	23.03-s002: Started on Mar 06, 2024 at 15:03:53 CET
+=======
+TOOL:	xrun(64)	23.03-s002: Started on Apr 20, 2024 at 10:21:11 CEST
+>>>>>>> 2c2d000701584aa8b84332a4fbdbf6f4bfb13747
 xrun
 	+sv
 	-64bit
@@ -22,6 +26,118 @@ xrun
 	-timescale 1ns/10ps
 	-access +rwc
 	-allowredefinition
+<<<<<<< HEAD
+=======
+file: ../Verilog/RTL/alu.v
+	module worklib.alu:v
+		errors: 0, warnings: 0
+file: ../Verilog/RTL/alu_control.v
+	module worklib.alu_control:v
+		errors: 0, warnings: 0
+file: ../Verilog/RTL/branch_unit.v
+	module worklib.branch_unit:v
+		errors: 0, warnings: 0
+file: ../Verilog/RTL/control_unit.v
+	module worklib.control_unit:v
+		errors: 0, warnings: 0
+file: ../Verilog/RTL/cpu.v
+	module worklib.cpu:v
+		errors: 0, warnings: 0
+file: ../Verilog/RTL/immediate_extend_unit.v
+	module worklib.immediate_extend_unit:v
+		errors: 0, warnings: 0
+file: ../Verilog/RTL/mux_2.v
+	module worklib.mux_2:v
+		errors: 0, warnings: 0
+file: ../Verilog/RTL/pc.v
+	module worklib.pc:v
+		errors: 0, warnings: 0
+file: ../Verilog/RTL/register_file.v
+	module worklib.register_file:v
+		errors: 0, warnings: 0
+file: ../Verilog/RTL/reg_arstn.v
+	module worklib.reg_arstn:v
+		errors: 0, warnings: 0
+file: ../Verilog/RTL/reg_arstn_en.v
+	module worklib.reg_arstn_en:v
+		errors: 0, warnings: 0
+file: ../Verilog/RTL/sram.v
+	module worklib.sram_BW32:v
+		errors: 0, warnings: 0
+	module worklib.sram_BW64:v
+		errors: 0, warnings: 0
+file: ../Verilog/cpu_tb.v
+	module worklib.cpu_tb:v
+		errors: 0, warnings: 0
+file: ../Verilog/sky130_sram_2rw.v
+	module worklib.sky130_sram_2rw_32x128_32:v
+		errors: 0, warnings: 0
+	module worklib.sky130_sram_2rw_64x128_64:v
+		errors: 0, warnings: 0
+	Elaborating the design hierarchy:
+		Caching library 'worklib' ....... Done
+	Top level design units:
+		cpu_tb
+	Building instance overlay tables: .................... Done
+	Generating native compiled code:
+		worklib.sky130_sram_2rw_64x128_64:v <0x04f63d26>
+			streams:   4, words:  3138
+		worklib.reg_arstn_en:v <0x4d7f7e5d>
+			streams:   3, words:   823
+		worklib.branch_unit:v <0x7f8cd286>
+			streams:   1, words:   621
+		worklib.alu:v <0x7e0bffae>
+			streams:   6, words:  5703
+		worklib.alu_control:v <0x3b5845b2>
+			streams:   3, words:  1017
+		worklib.reg_arstn_en:v <0x0661c379>
+			streams:   3, words:   884
+		worklib.reg_arstn_en:v <0x7b3640ff>
+			streams:   3, words:   884
+		worklib.reg_arstn_en:v <0x4f58a645>
+			streams:   3, words:   844
+		worklib.reg_arstn_en:v <0x1ddfdf75>
+			streams:   3, words:   823
+		worklib.immediate_extend_unit:v <0x24b5044e>
+			streams:   3, words:  3480
+		worklib.control_unit:v <0x65f2fd2d>
+			streams:   1, words:  8224
+		worklib.reg_arstn_en:v <0x5c7e1285>
+			streams:   4, words:  1003
+		worklib.sky130_sram_2rw_32x128_32:v <0x2e899667>
+			streams:   6, words:  3445
+		worklib.reg_arstn_en:v <0x40e01be6>
+			streams:   3, words:  1151
+		worklib.mux_2:v <0x66f02fb7>
+			streams:   1, words:   531
+		worklib.pc:v <0x62ab99cf>
+			streams:   5, words:  1642
+		worklib.cpu_tb:v <0x34d425d4>
+			streams:  27, words: 54937
+		worklib.sram_BW32:v <0x5ec92f71>
+			streams:  10, words:  4764
+		worklib.sram_BW64:v <0x595dfd6c>
+			streams:  10, words:  4974
+		worklib.register_file:v <0x45c1ad61>
+			streams:   5, words: 27780
+		worklib.cpu:v <0x00e81108>
+			streams:   1, words:   305
+	Building instance specific data structures.
+	Loading native compiled code:     .................... Done
+	Design hierarchy summary:
+		                  Instances  Unique
+		Modules:                 55      15
+		Registers:              178     101
+		Scalar wires:            52       -
+		Expanded wires:          32       1
+		Vectored wires:          53       -
+		Always blocks:          114      37
+		Initial blocks:           3       3
+		Cont. assignments:        4       4
+		Pseudo assignments:      29       -
+		Simulation timescale:  10ps
+	Writing initial simulation snapshot: worklib.cpu_tb:v
+>>>>>>> 2c2d000701584aa8b84332a4fbdbf6f4bfb13747
 Loading snapshot worklib.cpu_tb:v .................... Done
 xcelium> source /esat/micas-data/software/Cadence/xcelium_23.03/tools/xcelium/files/xmsimrc
 xcelium> run
@@ -35,4 +151,8 @@ Mult2 Working Correctly
 Simulation complete via $finish(1) at time 32450 NS + 8
 ../Verilog/cpu_tb.v:327    $finish;
 xcelium> exit
+<<<<<<< HEAD
 TOOL:	xrun(64)	23.03-s002: Exiting on Mar 06, 2024 at 15:03:54 CET  (total: 00:00:01)
+=======
+TOOL:	xrun(64)	23.03-s002: Exiting on Apr 20, 2024 at 10:21:13 CEST  (total: 00:00:02)
+>>>>>>> 2c2d000701584aa8b84332a4fbdbf6f4bfb13747

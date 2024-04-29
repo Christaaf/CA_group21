@@ -4,10 +4,14 @@
 1707816050 /users/students/r0755669/Documents/CA/CA_group21/CA_Exercises/Verilog/RTL/pc.v
 1708329443 /users/students/r0795269/Documents/CA/CA_group21/CA_Exercises/Verilog/RTL/mux_2.v
 1708329443 /users/students/r0795269/Documents/CA/CA_group21/CA_Exercises/Verilog/RTL/reg_arstn_en.v
+<<<<<<< HEAD
 1708333711 /users/students/r0795269/Documents/CA/CA_group21/CA_Exercises/Verilog/RTL/cpu.v
 1709729553 /users/students/r0755669/Documents/CA/CA_group21/CA_Exercises/Verilog/RTL/alu.v
 1709729553 /users/students/r0755669/Documents/CA/CA_group21/CA_Exercises/Verilog/RTL/alu_control.v
 1707816050 /users/students/r0755669/Documents/CA/CA_group21/CA_Exercises/Verilog/RTL/mux_2.v
+=======
+1713600893 /users/students/r0795269/Documents/CA/CA_group21/CA_Exercises/Verilog/RTL/cpu.v
+>>>>>>> 2c2d000701584aa8b84332a4fbdbf6f4bfb13747
 1708329443 /users/students/r0795269/Documents/CA/CA_group21/CA_Exercises/Verilog/RTL/sram.v
 1708333090 /users/students/r0795269/Documents/CA/CA_group21/CA_Exercises/Verilog/RTL/alu_control.v
 1707816050 /users/students/r0755669/Documents/CA/CA_group21/CA_Exercises/Verilog/RTL/register_file.v
