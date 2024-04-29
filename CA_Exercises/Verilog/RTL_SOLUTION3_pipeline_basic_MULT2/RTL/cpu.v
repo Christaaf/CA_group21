@@ -109,21 +109,14 @@ wire [   63:0] mem_data_MEM_WB;
 wire [   63:0] alu_out_MEM_WB;
 wire [    4:0] waddr_MEM_WB;
 
+
+
+
+
+
 // WB STAGE WIRES
 wire [      63:0] regfile_wdata_WB;
 
-
-// Forwarding unit outputs
-wire [1:0]        MUX_A;
-wire [1:0]        MUX_B;
-
-// Forwarding MUXs outputs
-wire [63:0] MUX_A_out;
-wire [63:0] MUX_B_out;
-
-//RS1 and RS2 ID_EX
-wire  [4:0] RS1_ID_EX;
-wire  [4:0] RS2_ID_EX;
 
 
 
@@ -419,29 +412,6 @@ reg_arstn_en#(
    .dout(func3_ID_EX)
 );
 
-//RS1 and RS2 ID_EX
-//Reg RS1 
-reg_arstn_en#(
-   .DATA_W(5) // width of the forwarded signal
-)forwarding_MUX_A(
-   .clk (clk),
-   .arst_n (arst_n),
-   .din (instruction_IF_ID[19:15]),
-   .en(enable),
-   .dout(RS1_ID_EX)
-);
-
-//Reg RS2
-reg_arstn_en#(
-   .DATA_W(5) // width of the forwarded signal
-)forwarding_MUX_B(
-   .clk (clk),
-   .arst_n (arst_n),
-   .din (instruction_IF_ID[24:20]),
-   .en(enable),
-   .dout(RS2_ID_EX)
-);
-
 
 // ID_EX_REG END
 
@@ -449,29 +419,6 @@ reg_arstn_en#(
 
 
 // EX STAGE BEGIN
-
-
-mux_3 #(
-   .DATA_W(64)
-)ALU_forward_mux_operand0(
-   .input_a(regfile_rdata_1_ID_EX),
-   .input_b(regfile_wdata_WB),
-   .input_c(alu_out_EX_MEM),
-   .select_a(MUX_A),
-   .mux_out(MUX_A_out)
-);
-
-
-mux_3 #(
-   .DATA_W(64)
-)ALU_forward_mux_operand1(
-   .input_a(regfile_rdata_2_ID_EX),
-   .input_b(regfile_wdata_WB),
-   .input_c(alu_out_EX_MEM),
-   .select_a(MUX_B),
-   .mux_out(MUX_B_out)
-);
-
 alu_control alu_ctrl(
    .func7_5       (func75_ID_EX ),
    .func7_0       (func70_ID_EX   ),
@@ -484,7 +431,7 @@ mux_2 #(
    .DATA_W(64)
 ) alu_operand_mux (
    .input_a (immediate_extended_ID_EX),
-   .input_b (MUX_B_out    ),
+   .input_b (regfile_rdata_2_ID_EX    ),
    .select_a(alu_src_ID_EX           ),
    .mux_out (alu_operand_2     )
 );
@@ -492,25 +439,13 @@ mux_2 #(
 alu#(
    .DATA_W(64)
 ) alu(
-   .alu_in_0 (MUX_A_out ),
+   .alu_in_0 (regfile_rdata_1_ID_EX ),
    .alu_in_1 (alu_operand_2   ),
    .alu_ctrl (alu_control     ),
    .alu_out  (alu_out         ),
    .zero_flag(zero_flag       ),
    .overflow (                )
 );
-
-
-forwarding_unit forwarding_unitt(
-      .WB__EX_MEM(reg_write_EX_MEM),
-      .WB__MEM_WB(reg_write_MEM_WB),
-      .RD__EX_MEM(waddr_EX_MEM),
-      .RD__MEM_WB(waddr_MEM_WB),
-      .RS1__ID_EX(RS1_ID_EX),
-      .RS2__ID_EX(RS2_ID_EX),
-      .MUX_A(MUX_A),
-      .MUX_B(MUX_B)
-   );
 
 branch_unit#(
    .DATA_W(64)
