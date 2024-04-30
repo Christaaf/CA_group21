@@ -7,15 +7,7 @@
 +EMGRLOG
 xrun.log
 -XLSTIME
-<<<<<<< HEAD
-<<<<<<< HEAD
-1709733833
-=======
-1713601271
->>>>>>> 2c2d000701584aa8b84332a4fbdbf6f4bfb13747
-=======
-1714426151
->>>>>>> mult3
+1714479491
 -XLKEEP
 -XLMODE
 ./xcelium.d/run.lnx8664.23.03.d
@@ -29,12 +21,4 @@ xrun
 -XLVERSION
 "TOOL:	xrun(64)	23.03-s002"
 -XLNAME
-<<<<<<< HEAD
-<<<<<<< HEAD
-./xcelium.d/run.lnx8664.23.03.d/pc-klas2-8.esat.kuleuven.be_18898
-=======
-./xcelium.d/run.lnx8664.23.03.d/stud-r8-12.esat.kuleuven.be_6537
->>>>>>> 2c2d000701584aa8b84332a4fbdbf6f4bfb13747
-=======
-./xcelium.d/run.lnx8664.23.03.d/vierre64.esat.kuleuven.be_1731135
->>>>>>> mult3
+./xcelium.d/run.lnx8664.23.03.d/pc-klas1-16.esat.kuleuven.be_3870
