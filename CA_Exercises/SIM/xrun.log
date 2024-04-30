@@ -1,5 +1,5 @@
 xrun(64): 23.03-s002: (c) Copyright 1995-2023 Cadence Design Systems, Inc.
-TOOL:	xrun(64)	23.03-s002: Started on Apr 30, 2024 at 14:18:11 CEST
+TOOL:	xrun(64)	23.03-s002: Started on Apr 30, 2024 at 14:24:00 CEST
 xrun
 	+sv
 	-64bit
@@ -37,4 +37,4 @@ Mult3 Working Correctly
 Simulation complete via $finish(1) at time 30950 NS + 8
 ../Verilog/cpu_tb.v:327    $finish;
 xcelium> exit
-TOOL:	xrun(64)	23.03-s002: Exiting on Apr 30, 2024 at 14:18:11 CEST  (total: 00:00:00)
+TOOL:	xrun(64)	23.03-s002: Exiting on Apr 30, 2024 at 14:24:02 CEST  (total: 00:00:02)
