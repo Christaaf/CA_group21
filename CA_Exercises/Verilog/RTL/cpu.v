@@ -39,6 +39,8 @@ module cpu(
    );
 
 
+// Hazard detection
+wire              pc_write, enable_pipeline__IF_ID, flush_pipeline;
 
 
 // IF STAGE WIRES
@@ -225,6 +227,18 @@ register_file #(
 immediate_extend_unit immediate_extend_u(
     .instruction         (instruction_IF_ID),
     .immediate_extended  (immediate_extended)
+);
+
+
+hazard_detection_unit hazard_detection_unit(
+      .RS1__IF_ID       (instruction_IF_ID[19:15]  ),
+      .RS2__IF_ID       (instruction_IF_ID[24:20]  ),
+      .RD__ID_EX        (waddr_ID_EX               ),
+      .mem_read__ID_EX  (mem_read_ID_EX            ),
+   //   .mem_read_ex    (mem_read_EX               ),
+      .pc_write         (pc_write                  ),
+      .enable__IF_ID    (enable_pipeline__IF_ID    ),
+      .flush_pipeline   (flush_pipeline            )
 );
 
 // ID STAGE END

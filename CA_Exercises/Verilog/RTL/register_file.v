@@ -36,11 +36,24 @@ module register_file#(
    integer idx;
 
 
-   always@(*) begin
-         rdata_1 = reg_array[raddr_1];
-         rdata_2 = reg_array[raddr_2];
-   end
+   // always@(*) begin
+   //       rdata_1 = reg_array[raddr_1];
+   //       rdata_2 = reg_array[raddr_2];
+   // end
 
+   always@(*) begin
+      if(reg_write && (waddr == raddr_1)) begin
+         rdata_1 = wdata;
+      end else begin
+         rdata_1 = reg_array[raddr_1];
+      end
+      
+      if(reg_write && (waddr == raddr_2)) begin
+         rdata_2 = wdata;
+      end else begin
+         rdata_2 = reg_array[raddr_2];
+      end
+   end
 
    //Register file write process
    always@(*) begin
