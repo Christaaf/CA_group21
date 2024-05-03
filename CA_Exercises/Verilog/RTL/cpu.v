@@ -49,6 +49,7 @@ wire [      63:0] updated_pc,current_pc;
 
 // IF_ID REG WIRES
 wire  [63:0]   pc_IF_ID;
+wire  [63:0]   current_pc_IF_ID;
 wire [31:0]    instruction_IF_ID;
 
 // ID STAGE WIRES
@@ -57,6 +58,11 @@ wire              reg_dst,branch,mem_read,mem_2_reg,
 wire [       1:0] alu_op;
 wire [      63:0] regfile_rdata_1,regfile_rdata_2;
 wire signed [63:0] immediate_extended;
+
+wire              reg_dst_muxb, branch_muxb, mem_read_muxb, mem_2_reg_muxb, mem_write_muxb,
+                  alu_src_muxb, reg_write_muxb, jump_muxb;
+wire [1:0]        alu_op_muxb;
+wire [31:0]    instruction_ID;
 
 //ID_EX WIRES
 wire [       1:0] alu_op_ID_EX;
@@ -69,6 +75,7 @@ wire           alu_src_ID_EX;
 wire           reg_write_ID_EX;
 wire           jump_ID_EX;
 wire  [63:0]   pc_ID_EX;
+wire  [63:0]   current_pc_ID_EX;
 wire [      63:0] regfile_rdata_1_ID_EX;
 wire [      63:0] regfile_rdata_2_ID_EX;
 wire signed [63:0] immediate_extended_ID_EX;
@@ -127,7 +134,7 @@ wire [63:0] MUX_B_out;
 wire  [4:0] RS1_ID_EX;
 wire  [4:0] RS2_ID_EX;
 
-
+reg pc_src;
 
 
 
@@ -139,12 +146,11 @@ pc #(
    .arst_n    (arst_n    ),
    .branch_pc (branch_pc ),
    .jump_pc   (jump_pc   ),
-   .zero_flag (zero_flag_EX_MEM ),
-   .branch    (branch_EX_MEM     ),
-   .jump      (jump_EX_MEM       ),
+   .jump      (jump       ),
    .current_pc(current_pc),
-   .enable    (enable    ),
-   .updated_pc(updated_pc)
+   .enable    (pc_write    ),
+   .updated_pc(updated_pc),
+   .pc_src     (pc_src)
 );
 
 sram_BW32 #(
@@ -176,19 +182,32 @@ reg_arstn_en#(
    .clk (clk),
    .arst_n (arst_n),
    .din (updated_pc),
-   .en(enable),
+   .en(enable_pipeline__IF_ID),
    .dout(pc_IF_ID)
 );
 
+//Instruction register
 reg_arstn_en#(
    .DATA_W(32) // width of the forwarded signal
 )signal_pipe_IF_ID(
    .clk (clk),
    .arst_n (arst_n),
-   .din (instruction),
-   .en(enable),
+   .din ((jump || pc_src) ? {28'b0, 4'b1101} : instruction),
+   .en(enable_pipeline__IF_ID),
    .dout(instruction_IF_ID)
 );
+
+
+reg_arstn_en#(
+   .DATA_W(64) // width of the forwarded signal
+)pipeline_pc_IF_ID(
+   .clk (clk),
+   .arst_n (arst_n),
+   .din (current_pc),
+   .en(enable_pipeline__IF_ID),
+   .dout(current_pc_IF_ID)
+);
+
 // IF_ID REG END
 
 
@@ -198,15 +217,15 @@ reg_arstn_en#(
 
 control_unit control_unit(
    .opcode   (instruction_IF_ID[6:0]),
-   .alu_op   (alu_op          ),
-   .reg_dst  (reg_dst         ),
-   .branch   (branch          ),
-   .mem_read (mem_read        ),
-   .mem_2_reg(mem_2_reg       ),
-   .mem_write(mem_write       ),
-   .alu_src  (alu_src         ),
-   .reg_write(reg_write       ),
-   .jump     (jump            )
+   .alu_op   (alu_op_muxb          ),
+   .reg_dst  (reg_dst_muxb         ),
+   .branch   (branch_muxb          ),
+   .mem_read (mem_read_muxb        ),
+   .mem_2_reg(mem_2_reg_muxb       ),
+   .mem_write(mem_write_muxb       ),
+   .alu_src  (alu_src_muxb         ),
+   .reg_write(reg_write_muxb       ),
+   .jump     (jump_muxb            )
 );
 
 register_file #(
@@ -235,10 +254,34 @@ hazard_detection_unit hazard_detection_unit(
       .RS2__IF_ID       (instruction_IF_ID[24:20]  ),
       .RD__ID_EX        (waddr_ID_EX               ),
       .mem_read__ID_EX  (mem_read_ID_EX            ),
-   //   .mem_read_ex    (mem_read_EX               ),
+      .mem_read         (mem_read                  ),
       .pc_write         (pc_write                  ),
       .enable__IF_ID    (enable_pipeline__IF_ID    ),
       .flush_pipeline   (flush_pipeline            )
+);
+
+mux_2 #(
+   .DATA_W(42)
+) flush_pipeline_mux (
+   .input_a ({38'b0000000000, 4'b1101}),
+   .input_b ({ alu_op_muxb, reg_dst_muxb, branch_muxb, mem_read_muxb, mem_2_reg_muxb, mem_write_muxb,
+               alu_src_muxb, reg_write_muxb, jump_muxb, instruction_IF_ID}),
+   .select_a(flush_pipeline),
+   .mux_out ({alu_op, reg_dst, branch, mem_read, mem_2_reg, mem_write, alu_src, reg_write, jump, instruction_ID})
+);
+
+
+branch_unit#(
+   .DATA_W(64)
+)branch_unit(
+   .updated_pc         (pc_IF_ID     ),
+   .immediate_extended         (immediate_extended     ),
+   .branch_pc (branch_pc),
+   .branch          (branch         ),
+   .rdata_1            (regfile_rdata_1           ),
+   .rdata_2            (regfile_rdata_2           ),
+   .jump_pc            (jump_pc           ),
+   .pc_src            (pc_src           )
 );
 
 // ID STAGE END
@@ -356,6 +399,17 @@ reg_arstn_en#(
    .dout(pc_ID_EX)
 );
 
+
+reg_arstn_en#(
+   .DATA_W(64)
+)current_pc_pipeline_IDEX(
+   .clk     (clk),
+   .arst_n  (arst_n),
+   .din     (current_pc_IF_ID),
+   .en      (enable),
+   .dout    (current_pc_ID_EX)
+);
+
 // REG readdata1_ID_EX
 reg_arstn_en#(
    .DATA_W(64) // width of the forwarded signal
@@ -395,7 +449,7 @@ reg_arstn_en#(
 )waddr_IDEX(
    .clk (clk),
    .arst_n (arst_n),
-   .din (instruction_IF_ID[11:7]),
+   .din (instruction_ID[11:7]),
    .en(enable),
    .dout(waddr_ID_EX)
 );
@@ -406,7 +460,7 @@ reg_arstn_en#(
 )func75_IDEX(
    .clk (clk),
    .arst_n (arst_n),
-   .din (instruction_IF_ID[30]),
+   .din (instruction_ID[30]),
    .en(enable),
    .dout(func75_ID_EX)
 );
@@ -417,7 +471,7 @@ reg_arstn_en#(
 )func70_IDEX(
    .clk (clk),
    .arst_n (arst_n),
-   .din (instruction_IF_ID[25]),
+   .din (instruction_ID[25]),
    .en(enable),
    .dout(func70_ID_EX)
 );
@@ -428,7 +482,7 @@ reg_arstn_en#(
 )func3_IDEX(
    .clk (clk),
    .arst_n (arst_n),
-   .din (instruction_IF_ID[14:12]),
+   .din (instruction_ID[14:12]),
    .en(enable),
    .dout(func3_ID_EX)
 );
@@ -440,7 +494,7 @@ reg_arstn_en#(
 )forwarding_MUX_A(
    .clk (clk),
    .arst_n (arst_n),
-   .din (instruction_IF_ID[19:15]),
+   .din (instruction_ID[19:15]),
    .en(enable),
    .dout(RS1_ID_EX)
 );
@@ -451,7 +505,7 @@ reg_arstn_en#(
 )forwarding_MUX_B(
    .clk (clk),
    .arst_n (arst_n),
-   .din (instruction_IF_ID[24:20]),
+   .din (instruction_ID[24:20]),
    .en(enable),
    .dout(RS2_ID_EX)
 );
@@ -526,14 +580,6 @@ forwarding_unit forwarding_unitt(
       .MUX_B(MUX_B)
    );
 
-branch_unit#(
-   .DATA_W(64)
-)branch_unit(
-   .updated_pc         (pc_ID_EX     ),
-   .immediate_extended (immediate_extended_ID_EX),
-   .branch_pc          (branch_pc         ),
-   .jump_pc            (jump_pc           )
-);
 
 // EX STAGE END
 
